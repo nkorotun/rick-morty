@@ -1,0 +1,1 @@
+export const RESIDENTS_TO_SHOW = 8;
