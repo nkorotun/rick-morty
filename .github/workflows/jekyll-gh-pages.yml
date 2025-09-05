@@ -1,4 +1,4 @@
-name: Deploy React app to GitHub Pages
+name: Deploy Vite React app to GitHub Pages
 
 on:
   push:
@@ -33,8 +33,31 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build
-        run: yarn build
+      # Run the TS build just like your package.json script does
+      - name: TypeScript build
+        run: npx tsc -b
+
+      # Compute BASE automatically:
+      # - "/" for user/org sites (e.g. myname.github.io)
+      # - "/<repo>/" for project sites
+      - name: Compute BASE path
+        run: |
+          REPO="${{ github.repository }}"            # owner/repo
+          NAME="${REPO#*/}"                         # repo
+          if [[ "$NAME" == *".github.io" ]]; then
+            echo "BASE=/" >> $GITHUB_ENV
+          else
+            echo "BASE=/$NAME/" >> $GITHUB_ENV
+          fi
+          echo "Using BASE='$BASE'"
+
+      # Build Vite without editing vite.config.ts
+      - name: Vite build
+        run: npx vite build --base "$BASE"
+
+      # SPA fallback so client routing works on refresh
+      - name: Create SPA fallback (404.html)
+        run: cp dist/index.html dist/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
