@@ -1,15 +1,11 @@
 import { ChangeEvent, useEffect, useReducer, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/button";
-import { CharacterCard } from "../../components/character-card";
 import { Icon } from "../../components/icon";
 import { Loader } from "../../components/loader";
-import { Pagination } from "../../components/pagination/pagination";
-import { IPagination } from "../../components/pagination/pagination.types";
 import { BASE_URL, SEARCH_INPUT_DEBOUNCE_DELAY } from "../../constants/api";
 import useDebounce from "../../hooks/useDebounce";
-import { calculateUglyPagination } from "../locations/page.helpers";
-import { IEpisode, IEpisodeState, TAction } from "./page.types";
+import { IEpisodeState, TAction } from "./page.types";
 
 const initialState: IEpisodeState = {
   next_url: null,
